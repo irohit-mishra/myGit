@@ -1,29 +1,28 @@
 import sys
 import os
 import zlib
+import hashlib
 
 
 def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    #print("Logs from your program will appear here!")
-
-    # Uncomment this block to pass the first stage
-    #
     command = sys.argv[1]
+
     if command == "init":
-         os.mkdir(".git")
-         os.mkdir(".git/objects")
-         os.mkdir(".git/refs")
-         with open(".git/HEAD", "w") as f:
-             f.write("ref: refs/heads/main\n")
-         print("Initialized git directory")
-    elif command =="cat-file":
+        os.mkdir(".git")
+        os.mkdir(".git/objects")
+        os.mkdir(".git/refs")
+        with open(".git/HEAD", "w") as f:
+            f.write("ref: refs/heads/main\n")
+        print("Initialized git directory")
+
+    elif command == "cat-file":
         if sys.argv[2] == "-p":
             blob_sha = sys.argv[3]
             with open(f".git/objects/{blob_sha[:2]}/{blob_sha[2:]}", "rb") as f:
                 raw = zlib.decompress(f.read())
                 header, content = raw.split(b"\0", maxsplit=1)
                 print(content.decode("utf-8"), end="")
+
     elif command == "hash-object":
         if sys.argv[2] == "-w":
             file_path = sys.argv[3]
@@ -53,7 +52,8 @@ def main():
             print(sha1)
 
     else:
-         raise RuntimeError(f"Unknown command #{command}")
+        raise RuntimeError(f"Unknown command #{command}")
+
 
 if __name__ == "__main__":
     main()
