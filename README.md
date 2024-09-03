@@ -1,6 +1,8 @@
 ## myGit
 
-Welcome!In this project, I build a small-scale implementation of Git to understand the inner workings of this popular version control system. This implementation focuses on initializing repositories, creating commits, and cloning public repositories, providing insight into Git's `.git` directory structure, object storage, and transfer protocols.
+Welcome! 
+
+In this project, I build a small-scale implementation of Git to understand the inner workings of this popular version control system. This implementation focuses on initializing repositories, creating commits, and cloning public repositories, providing insight into Git's `.git` directory structure, object storage, and transfer protocols.
 
 ## Overview
 
