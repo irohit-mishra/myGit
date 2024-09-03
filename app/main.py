@@ -128,5 +128,76 @@ def main():
     else:
         raise RuntimeError(f"Unknown command #{command}")
 
+def clone_repo(repo_url, target_dir):
+    # Step 1: Create the target directory
+    os.makedirs(target_dir, exist_ok=True)
+    os.chdir(target_dir)
+    os.makedirs(".git/objects", exist_ok=True)
+    os.makedirs(".git/refs", exist_ok=True)
+
+    # Step 2: Parse the URL to find the repo owner and name
+    repo_parts = repo_url.rstrip('/').split('/')
+    repo_owner = repo_parts[-2]
+    repo_name = repo_parts[-1]
+
+    # Step 3: Git Info Refs
+    info_refs_url = f"https://github.com/{repo_owner}/{repo_name}.git/info/refs?service=git-upload-pack"
+    response = requests.get(info_refs_url)
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to fetch info/refs: {response.status_code}")
+
+    # Step 4: Extract refs
+    refs = parse_refs(response.content)
+    for ref_name, ref_sha in refs.items():
+        save_ref(ref_name, ref_sha)
+
+    # Step 5: Git Upload Pack Request
+    upload_pack_url = f"https://github.com/{repo_owner}/{repo_name}.git/git-upload-pack"
+    upload_pack_data = build_upload_pack_request(refs)
+    response = requests.post(upload_pack_url, data=upload_pack_data, headers={"Content-Type": "application/x-git-upload-pack-request"})
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to fetch pack data: {response.status_code}")
+
+    # Step 6: Process Packfile and Store Objects
+    process_packfile(response.content)
+
+def parse_refs(data):
+    # Implement logic to parse the refs from the Git Smart HTTP response
+    refs = {}
+    lines = data.decode().split('\n')
+    for line in lines:
+        if line.startswith('00'):
+            break
+        parts = line.split()
+        if len(parts) >= 2:
+            ref_sha, ref_name = parts[0], parts[1]
+            refs[ref_name] = ref_sha
+    return refs
+
+def save_ref(ref_name, ref_sha):
+    ref_dir = os.path.dirname(f".git/{ref_name}")
+    os.makedirs(ref_dir, exist_ok=True)
+    with open(f".git/{ref_name}", "w") as f:
+        f.write(ref_sha + "\n")
+
+def build_upload_pack_request(refs):
+    # Implement logic to build the upload-pack request for the given refs
+    request = "0067want " + refs["HEAD"] + " multi_ack_detailed\n00000009done\n"
+    return request.encode()
+
+def process_packfile(data):
+    # Implement logic to parse and store the objects in the .git/objects directory
+    unpacked = zlib.decompress(data)
+    # Further process the unpacked data to store the objects
+    # You’ll need to handle different object types (blobs, trees, commits)
+
+def main():
+    if len(sys.argv) != 4 or sys.argv[1] != "clone":
+        print("Usage: your_program.sh clone <repository_url> <target_directory>")
+        return
+
+    repo_url = sys.argv[2]
+    target_dir = sys.argv[3]
+    clone_repo(repo_url, target_dir)
 if __name__ == "__main__":
     main()
