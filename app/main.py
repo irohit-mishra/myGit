@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Tuple, List
 from typing import Tuple, List, cast
 import urllib.request
-def read_object(parent: Path, sha: str) -> bytes:
- def init_repo(parent: Path):
+def init_repo(parent: Path):
+     
     (parent / ".git").mkdir(parents=True)
     (parent / ".git" / "objects").mkdir(parents=True)
     (parent / ".git" / "refs").mkdir(parents=True)
