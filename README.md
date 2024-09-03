@@ -19,4 +19,4 @@ This project includes a minimalistic version of Git capable of performing the fo
 - **Cloning**: Clone public repositories by fetching references and objects from a remote server.
 
 # Note 
-This Project is build during an online Challenge 'Build Your own x'
+This Project is build during an online Challenge ` Build Your own x `
