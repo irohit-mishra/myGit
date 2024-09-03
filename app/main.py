@@ -28,17 +28,18 @@ def write_tree(path: str):
             continue
         full = os.path.join(path, item)
         if os.path.isfile(full):
-            s += f"100644{item}\0".encode()
+            s += f"100644 {item}\0".encode()
         else:
-            s += f"40000{item}\0".encode()
+            s += f"40000 {item}\0".encode()
         sha1 = int.to_bytes(int(write_tree(full), base=16), length=20, byteorder="big")
         s += sha1
-    s= f"tree{len(s)}\0".encode() + s
+    s = f"tree {len(s)}\0".encode() + s
     sha1 = hashlib.sha1(s).hexdigest()
     os.makedirs(f".git/objects/{sha1[:2]}", exist_ok=True)
     with open(f".git/objects/{sha1[:2]}/{sha1[2:]}", "wb") as f:
         f.write(zlib.compress(s))
     return sha1
+
 def main():
     command = sys.argv[1]
 
