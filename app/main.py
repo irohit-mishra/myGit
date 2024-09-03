@@ -30,7 +30,7 @@ def write_tree(path: str):
         if item == ".git":
             continue
         full = os.path.join(path, item)
-        if os.path.isfile(full)):
+        if os.path.isfile(full):
             s += f"100644 {item}\0".encode()
         else:
             s += f"40000 {item}\0".encode()
