@@ -62,7 +62,7 @@ def main():
                 mode, binary_data = binary_data.split(b"\x00", maxsplit=1)
                 _, name = mode.split()
                 binary_data = binary_data[20:]
-                print(name.decode(utf-8))
+                print(name.decode("utf-8"))
 
     else:
         raise RuntimeError(f"Unknown command #{command}")
