@@ -2,9 +2,8 @@ import sys
 import os
 import zlib
 import hashlib
-import requests
 from pathlib import Path
-import requests
+import urllib.request
 
 def create_blob_entry(path, write=True):
     with open(path, "rb") as f:
