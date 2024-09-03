@@ -108,6 +108,46 @@ def main():
     else:
         raise RuntimeError(f"Unknown command #{command}")
 
+def commit_tree(tree_sha, parent_sha, message):
+    author = "Rohit Mishra <mail.irohitmishra@gmail.com>"
+    timestamp = int(time.time())
+    timezone = "-0000"
 
+    # Format the commit object
+    commit_content = f"tree {tree_sha}\n"
+    if parent_sha:
+        commit_content += f"parent {parent_sha}\n"
+    commit_content += f"author {author} {timestamp} {timezone}\n"
+    commit_content += f"committer {author} {timestamp} {timezone}\n\n"
+    commit_content += f"{message}\n"
+
+    # Add the header and calculate the hash
+    commit_object = f"commit {len(commit_content)}\0".encode() + commit_content.encode()
+    commit_sha = hashlib.sha1(commit_object).hexdigest()
+
+    # Write the commit object to the .git/objects directory
+    obj_dir = f".git/objects/{commit_sha[:2]}"
+    obj_file = f"{commit_sha[2:]}"
+    
+    if not os.path.exists(obj_dir):
+        os.makedirs(obj_dir)
+
+    with open(os.path.join(obj_dir, obj_file), "wb") as f:
+        f.write(zlib.compress(commit_object))
+
+    # Print the commit SHA
+    print(commit_sha)
+
+def main():
+    if len(sys.argv) < 5 or sys.argv[3] != "-m":
+        print("Usage: ./your_program.sh commit-tree <tree_sha> -p <commit_sha> -m <message>")
+        sys.exit(1)
+    
+    tree_sha = sys.argv[2]
+    parent_sha = sys.argv[4] if sys.argv[1] == "-p" else None
+    message_index = sys.argv.index("-m") + 1
+    message = sys.argv[message_index]
+
+    commit_tree(tree_sha, parent_sha, message)
 if __name__ == "__main__":
     main()
