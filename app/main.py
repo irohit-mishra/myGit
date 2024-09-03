@@ -4,7 +4,6 @@ import zlib
 import hashlib
 import struct
 from pathlib import Path
-from typing import Tuple, List
 from typing import Tuple, List, cast
 import urllib.request
 def init_repo(parent: Path):
@@ -19,15 +18,12 @@ def read_object(parent: Path, sha: str) -> Tuple[str, bytes]:
     post = sha[2:]
     p = parent / ".git" / "objects" / pre / post
     bs = p.read_bytes()
-    _, content = zlib.decompress(bs).split(b"\0", maxsplit=1)
-    return content
     head, content = zlib.decompress(bs).split(b"\0", maxsplit=1)
     ty, _ = head.split(b" ")
     return ty.decode(), content
 def write_object(parent: Path, ty: str, content: bytes) -> str:
     content = ty.encode() + b" " + f"{len(content)}".encode() + b"\0" + content
     hash = hashlib.sha1(content, usedforsecurity=False).hexdigest()
-    compressed_content = zlib.compress(content)
     compressed_content = zlib.compress(content, level=zlib.Z_BEST_SPEED)
     pre = hash[:2]
     post = hash[2:]
@@ -38,14 +34,9 @@ def write_object(parent: Path, ty: str, content: bytes) -> str:
 def main():
     match sys.argv[1:]:
         case ["init"]:
-            Path(".git/").mkdir(parents=True)
-            Path(".git/objects").mkdir(parents=True)
-            Path(".git/refs").mkdir(parents=True)
-            Path(".git/HEAD").write_text("ref: refs/heads/main\n")
             init_repo(Path("."))
             print("Initialized git directory")
         case ["cat-file", "-p", blob_sha]:
-            sys.stdout.buffer.write(read_object(Path("."), blob_sha))
             _, content = read_object(Path("."), blob_sha)
             sys.stdout.buffer.write(content)
         case ["hash-object", "-w", path]:
@@ -53,7 +44,6 @@ def main():
             print(hash)
         case ["ls-tree", "--name-only", tree_sha]:
             items = []
-            contents = read_object(Path("."), tree_sha)
             _, contents = read_object(Path("."), tree_sha)
             while contents:
                 mode, contents = contents.split(b" ", 1)
