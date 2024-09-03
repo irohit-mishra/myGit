@@ -129,7 +129,7 @@ def main():
 
         def clone_repo(url, dir):
             parent = Path(dir)
-    init_repo(parent)
+    init (parent)
 
     # Fetch refs
     refs = fetch_refs(url)
