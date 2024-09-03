@@ -10,7 +10,7 @@ def create_blob_entry(path, write=True):
     store = header + data
     sha = hashlib.sha1(store).hexdigest()
     if write:
-        os.mkdirs(f".git/objects/{sha[:2]}", exist_ok=True)
+        os.makedirs(f".git/objects/{sha[:2]}", exist_ok=True)
         with open(f".git/objects/{sha[:2]}/{sha[2:]}", "wb") as f:
              f.write(zlib.compress(store))
         return sha
