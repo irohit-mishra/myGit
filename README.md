@@ -1,59 +1,20 @@
-[![progress-banner](https://backend.codecrafters.io/progress/git/b1d82168-c546-4ae7-866e-836da7ef3c1e)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+## myGit
 
-This is a starting point for Python solutions to the
-["Build Your Own Git" Challenge](https://codecrafters.io/challenges/git).
+Welcome!In this project, I build a small-scale implementation of Git to understand the inner workings of this popular version control system. This implementation focuses on initializing repositories, creating commits, and cloning public repositories, providing insight into Git's `.git` directory structure, object storage, and transfer protocols.
 
-In this challenge, you'll build a small Git implementation that's capable of
-initializing a repository, creating commits and cloning a public repository.
-Along the way we'll learn about the `.git` directory, Git objects (blobs,
-commits, trees etc.), Git's transfer protocols and more.
+## Overview
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+This project includes a minimalistic version of Git capable of performing the following operations:
+- **Initialize a Repository**: Create a new Git repository with the necessary directories and files.
+- **Create Commits**: Create commits with tree and blob objects, emulating the core functionality of Git.
+- **Clone Public Repositories**: Clone public repositories, including fetching objects and references.
 
-# Passing the first stage
+## Features
 
-The entry point for your Git implementation is in `app/main.py`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
+- **Repository Initialization**: Set up a new Git repository with `.git` directory and subdirectories for objects and references.
+- **Object Storage**: Handle Git objects, including blobs (file contents), trees (directory listings), and commits (snapshots of the project).
+- **Commit Creation**: Create commits with a message and parent commit reference, including author and committer information.
+- **Cloning**: Clone public repositories by fetching references and objects from a remote server.
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
-```
-
-That's all!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `python` installed locally
-1. Run `./your_program.sh` to run your Git implementation, which is implemented
-   in `app/main.py`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
-
-# Testing locally
-
-The `your_program.sh` script is expected to operate on the `.git` folder inside
-the current working directory. If you're running this inside the root of this
-repository, you might end up accidentally damaging your repository's `.git`
-folder.
-
-We suggest executing `your_program.sh` in a different folder when testing
-locally. For example:
-
-```sh
-mkdir -p /tmp/testing && cd /tmp/testing
-/path/to/your/repo/your_program.sh init
-```
-
-To make this easier to type out, you could add a
-[shell alias](https://shapeshed.com/unix-alias/):
-
-```sh
-alias mygit=/path/to/your/repo/your_program.sh
-
-mkdir -p /tmp/testing && cd /tmp/testing
-mygit init
-```
+# Note 
+This Project is build during an online Challenge 'Build Your own x'
