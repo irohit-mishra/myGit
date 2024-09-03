@@ -93,11 +93,13 @@ def main():
             with open(f".git/objects/{hash[:2]}/{hash[2:]}", "rb") as f:
                 data = zlib.decompress(f.read())
                 _, binary_data = data.split(b"\x00", maxsplit=1)
+
             while binary_data:
-                mode, binary_data = binary_data.split(b"\x00", maxsplit=1)
-                _, name = mode.split()
-                binary_data = binary_data[20:]
-                print(name.decode("utf-8"))
+                  mode_name, binary_data = binary_data.split(b"\0", maxsplit=1)
+                  mode, name = mode_name.split(b" ", maxsplit=1)
+                  binary_data = binary_data[20:]
+                  print(name.decode("utf-8"))
+
 
     elif command =="write-tree":
         print(write_tree("./"))
