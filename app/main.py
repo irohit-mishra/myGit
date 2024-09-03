@@ -127,10 +127,6 @@ def main():
         hash = write_object(Path("."), "commit", contents)
         print(hash)
 
-        def clone_repo(url, dir):
-            parent = Path(dir)
-    init (parent)
-
     # Fetch refs
     refs = fetch_refs(url)
     for name, sha in refs.items():
